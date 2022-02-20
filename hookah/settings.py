@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'base.apps.BaseConfig',
+    'base.apps.BaseConfig', # приложение 
+    'phonenumber_field', # билиотека PhoneNumbers
 ]
+
+AUTH_USER_MODEL = 'base.UserModel'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
