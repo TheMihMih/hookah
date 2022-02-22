@@ -10,16 +10,18 @@ class UserModel(AbstractUser):
     Модель регистрации
 
     '''
+    
     name = models.CharField(max_length=200, null=True)
-    email = models.EmailField(unique=True, null=True, blank=True) #Кто сейчас регестрируется по email? Но пусть будет
+    email = models.EmailField(null=True, blank=True) #Необходим для переопределения родительского поля email
     phone = PhoneNumberField(unique=True, null=True)
+    username = None
 
-    PHONENUMBER_DEFAULT_REGION='RU'
     USERNAME_FIELD = 'phone'
+    PHONENUMBER_DEFAULT_REGION='RU'
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return str(self.phone)
+        return f'Имя пользователя: {self.name}. Телефон: {self.phone}'
 
 
 class MenuModel(models.Model):
@@ -64,4 +66,4 @@ class OrdersModel(models.Model):
     expired_time = models.DateTimeField(null=True)
 
     def __str__(self):
-        return str(self.expired_time)
+        return f'Guest: {self.user}, table: №{self.table}, time exp.: {self.expired_time}'
