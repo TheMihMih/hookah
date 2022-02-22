@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from  djmoney.models.fields import MoneyField
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class UserModel(AbstractUser):
@@ -48,3 +49,19 @@ class GamesModel(models.Model):
 
     def __str__(self):
         return self.game_name
+
+
+class OrdersModel(models.Model):
+    '''
+    Модель для брони столов
+    '''
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    table = models.IntegerField(validators=[
+        MaxValueValidator(15),
+        MinValueValidator(1)
+    ])
+    order_date = models.DateTimeField(null=True)
+    expired_time = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return str(self.expired_time)

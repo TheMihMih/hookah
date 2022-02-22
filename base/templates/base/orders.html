@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="order-container">
+
+    {% for order in orders %}
+        <p>{{ order.user }} -- {{ order.table }} <br>
+            {{ order.order_date }} -- {{ order.expired_time }}
+            <hr>
+        </p>
+    {% endfor %}        
+    
+</div>
+{% endblock %}

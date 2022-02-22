@@ -2,6 +2,33 @@
 
 {% block content %}
 
-<h1>hello</h1>
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
 
+</style>
+<hr>
+<div class="home-container">
+    <div class="Games">
+        <!-- В цикле выведем пару-тройку игр -->
+        {% for i in list %}
+            <a href="#">Игра {{ i }}</a>
+            <br>
+        {% endfor %} 
+    </div>
+
+    <div class="About">
+        Тут будет какой-то текст о заведении
+
+    </div>
+    <div class="MenuPos">
+        <!-- В цикле выведем пару-тройку пунктов меню(напитков?) -->
+        {% for i in list %}
+            <a href="#">Напиток {{ i }}</a>
+            <br>
+        {% endfor %}        
+    </div>
+</div>
 {% endblock %}

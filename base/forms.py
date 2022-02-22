@@ -1,8 +1,8 @@
-from dataclasses import fields
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm
+from django.forms import ModelForm, SelectDateWidget
+from django.forms.widgets import DateInput, TimeInput, SplitDateTimeWidget
 
-from .models import UserModel, MenuModel, GamesModel
+from .models import UserModel, MenuModel, GamesModel, OrdersModel
 
 
 class MyUserCreationForm(UserCreationForm):
@@ -11,7 +11,7 @@ class MyUserCreationForm(UserCreationForm):
     '''
     class Meta:
         model = UserModel
-        fields = ['name', 'phone', 'password_1', 'password_2']
+        fields = ['name', 'phone', 'password1', 'password2']
 
 
 class MenuForm(ModelForm):
@@ -30,3 +30,20 @@ class GamesForm(ModelForm):
     class Meta:
         model = GamesModel
         fields = '__all__'
+
+
+class OrdersForm(ModelForm):
+    """
+    Форма для брони
+    """
+    class Meta:
+        model = OrdersModel
+        fields = ['table', 'order_date']
+
+        widgets = {
+            'order_date': SplitDateTimeWidget(
+                date_attrs={'type': 'date'},
+                time_attrs={'type': 'time'},
+                time_format='%H-%M'
+            )
+        }
