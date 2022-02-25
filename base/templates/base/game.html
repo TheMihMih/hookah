@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="games-container">
+    <h2>{{ game.game_name }}</h2>
+    <div class="image image--small active">
+        <img src="{{ game.image.url }}" />
+    </div>
+    
+    {{ game.bio }}-- {{ game.game_type }}
+    {% if request.user.is_staff %}
+        <a href="{% url 'delete_game' game.id %}">Удалить</a>
+    {% endif %}    
+
+</div>
+{% endblock %}

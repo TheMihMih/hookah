@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
-from multiprocessing import context
 from time import strptime
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
 
-from .forms import OrdersForm, MyUserCreationForm
-from .models import OrdersModel, UserModel
+from .forms import GamesForm, OrdersForm, MyUserCreationForm
+from .models import GamesModel, OrdersModel, UserModel
 
 
 def homePage(request):
@@ -24,6 +23,9 @@ def homePage(request):
     return render(request, 'base/home.html', context)
 
 
+#Бронирование столиков
+
+
 def MakeOrderPage(request):
     '''
     Страница для бронирования столика
@@ -32,7 +34,7 @@ def MakeOrderPage(request):
     form = OrdersForm()
 
     if request.method == 'POST':
-        reservation_duration = strptime(request.POST.get('order_duration'), '%H:%M')
+        reservation_duration = strptime(request.POST.get('reservation_duration'), '%H:%M')
         date = request.POST.get('order_date_0') + ' ' + request.POST.get('order_date_1')
         reservation_time = datetime.strptime(date, '%Y-%m-%d %H:%M')
         expire_time = reservation_time + timedelta(
@@ -50,7 +52,7 @@ def MakeOrderPage(request):
         if order_exist:
             messages.error(request, 'К сожалению, на данное время выбранный столик недоступен')
             return redirect('make_order')
-
+        
         OrdersModel.objects.create(
             user = request.user,
             table = request.POST.get('table'),
@@ -78,6 +80,25 @@ def CheckOrdersPage(request):
         'orders': orders
     }
     return render(request, 'base/orders.html', context)
+
+
+def deletePage(request, id):
+    '''
+    Отмена брони
+    
+    '''
+    reservation = OrdersModel.objects.get(id=id)
+    title = 'reservation'
+    if request.method == 'POST':
+        reservation.delete()
+        return redirect('home')
+    context = {
+        'title': title
+    }
+    return render(request, 'base/delete.html', context)
+
+
+#Регистрация и логин
 
 
 def registerPage(request):
@@ -115,11 +136,18 @@ def processRegistration(request):
 
 
 def logoutPage(request):
+    '''
+    Выход из учетной записи
+    '''
     logout(request)
     return redirect('home')
 
 
 def loginPage(request):
+    '''
+    Страница входа в учетную запись
+    
+    '''
     page = 'login'
 
     context = { 'page': page }
@@ -127,6 +155,10 @@ def loginPage(request):
 
 
 def processLogin(request):
+    '''
+    Вход в учетную запись
+    
+    '''
     if request.method == 'POST':
         phone = request.POST.get('phone')
         password = request.POST.get('password')
@@ -143,3 +175,87 @@ def processLogin(request):
         else:
             messages.error(request, 'Произошла ошибка!')
             return redirect('login')
+
+
+#Игры
+
+
+def gamesPage(request):
+    '''
+    Страница со всеми играми
+    
+    '''
+
+    games = GamesModel.objects.all()
+    context = {
+        'games': games
+    }
+    return render(request, 'base/games.html', context)
+
+
+def singleGamePage(request, id):
+    '''
+    Подробности об определенной игре
+    '''
+    game = GamesModel.objects.get(id=id)
+    context = {
+        'game': game
+    }
+    return render(request, 'base/game.html', context)
+
+
+def addingGamePage(request):
+    '''
+    Страница добавления игр
+    
+    '''
+
+    form = GamesForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'base/add_game.html', context)
+
+
+def addingGameProcess(request):
+    '''
+    Добавление игры
+    
+    '''
+    form = GamesForm()
+    if request.method == 'POST':
+        form = GamesForm(request.POST, request.FILES)
+        if form.is_valid():
+            game = form.save(commit=False)
+            try:
+                exist_game = GamesModel.objects.get(
+                    game_name=request.POST.get('game_name')
+                )
+                if exist_game:
+                    print('Такая игра уже есть')
+                    messages.error(request, 'Такая игра уже есть')
+                    return redirect('add_game')
+                else:
+                    raise ValueError
+            except:
+                game.save()
+                return redirect('home')
+        else:
+            messages.error(request, 'Случилась ошибка!')
+            return redirect('add_game')
+
+
+def deleteGame(request, id):
+    '''
+    Удалить игру из бд
+    
+    '''
+    title = 'game'
+    game = GamesModel.objects.get(id=id)
+    if request.method == 'POST':
+        game.delete()
+        return redirect('games')
+    context = {
+        'title': title
+    }
+    return render(request, 'base/delete.html', context)

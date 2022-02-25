@@ -11,5 +11,12 @@ urlpatterns = [
     path('register/process', views.processRegistration , name='register-process'),
     path('logout', views.logoutPage , name='logout'),
     path('login', views.loginPage , name='login'),
-    path('logout/process', views.processLogin , name='login-process'),
+    path('login/process', views.processLogin , name='login-process'),
+    path('delete_reservation/<str:id>', views.deletePage , name='delete_reservation'),
+    path('games', views.gamesPage , name='games'),
+    path('games/<str:id>', views.singleGamePage , name='singlegame'),
+    path('add_game', views.addingGamePage , name='add_game'),
+    path('add_game/process', views.addingGameProcess, name='add_game-process'),
+    path('delete_game/<str:id>', views.deleteGame , name='delete_game'),
+
 ]

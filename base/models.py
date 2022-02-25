@@ -47,7 +47,7 @@ class GamesModel(models.Model):
     game_type = models.CharField(max_length=50, null=True)
     bio = models.TextField(null=True, blank=True)
 
-    image = models.ImageField(null=True, default='avatar.svg')
+    image = models.ImageField(null=True, blank=True, default='avatar.svg')
 
     def __str__(self):
         return self.game_name

@@ -3,12 +3,12 @@
 {% block content %}
 
 
-<div class="order-container">
+<div class="reservation-container">
 
     <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <select name="order_duration" id="">
+        <select name="reservation_duration" id="">
             <option value="1:30">1.5 часа</option>
             <option value="3:00">3 часа</option>
             <option value="4:30">4.5 часа</option>

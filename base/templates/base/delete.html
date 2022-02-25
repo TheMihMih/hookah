@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="reservation-cancel">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% if title == 'reservation' %}
+                Вы уверены, что хотите отменить бронирование? <br>
+            {% elif title == 'game' %}
+                Вы уверены, что хотите удалить игру из базы? <br>
+            {% endif %}
+            <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+            <input type="submit" value="Confirm" />
+        </form>
+    </div>
+
+{% endblock %}
