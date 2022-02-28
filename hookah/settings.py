@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig', # приложение 
     'phonenumber_field', # билиотека PhoneNumbers
     'djmoney', # Django Money lib
+    'rest_framework', #Django REST
 ]
 
 AUTH_USER_MODEL = 'base.UserModel'
