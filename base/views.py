@@ -10,8 +10,10 @@ from .models import GamesModel, MenuModel, OrdersModel, UserModel
 
 def homePage(request):
     '''
-    Главная страница
+    Домашняя страница
     
+    Пара игр, пара напитков... что-то такое
+
     '''
 
     games = GamesModel.objects.all()
@@ -79,7 +81,7 @@ def MakeOrderPage(request, table):
 def CheckOrdersPage(request):
     '''
     Страница для просмотра бронирования
-    Персонал видит все, пользователь только свой
+    Stuff only
     '''
     time = datetime.now()
     if request.user.is_staff:
