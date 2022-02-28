@@ -3,17 +3,15 @@ from time import strptime
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
-
+from django.contrib.admin.views.decorators import staff_member_required
 from .forms import GamesForm, MenuForm, OrdersForm, MyUserCreationForm
 from .models import GamesModel, MenuModel, OrdersModel, UserModel
 
 
 def homePage(request):
     '''
-    Домашняя страница
+    Главная страница
     
-    Пара игр, пара напитков... что-то такое
-
     '''
 
     games = GamesModel.objects.all()
@@ -81,7 +79,7 @@ def MakeOrderPage(request, table):
 def CheckOrdersPage(request):
     '''
     Страница для просмотра бронирования
-    Stuff only
+    Персонал видит все, пользователь только свой
     '''
     time = datetime.now()
     if request.user.is_staff:
@@ -217,6 +215,7 @@ def singleGamePage(request, id):
     return render(request, 'base/game.html', context)
 
 
+@staff_member_required(login_url='login')
 def addingGamePage(request):
     '''
     Страница добавления игр
@@ -230,6 +229,7 @@ def addingGamePage(request):
     return render(request, 'base/add_game.html', context)
 
 
+@staff_member_required(login_url='login')
 def addingGameProcess(request):
     '''
     Добавление игры
@@ -258,6 +258,7 @@ def addingGameProcess(request):
             return redirect('add_game')
 
 
+@staff_member_required(login_url='login')
 def deleteGame(request, id):
     '''
     Удалить игру из бд
@@ -287,6 +288,7 @@ def menuPage(request):
     return render(request, 'base/menu.html', context)
 
 
+@staff_member_required(login_url='login')
 def addProduct(request):
     '''
     Страница добавления продуктов
@@ -299,6 +301,7 @@ def addProduct(request):
     return render(request, 'base/add_product.html', context)
 
 
+@staff_member_required(login_url='login')
 def addProductProcess(request):
     form = MenuForm()
     if request.method == 'POST':
@@ -319,6 +322,7 @@ def addProductProcess(request):
             return redirect('add_product') 
 
 
+@staff_member_required(login_url='login')
 def deleteProduct(request, id):
     '''
     Удалить позицию из меню
