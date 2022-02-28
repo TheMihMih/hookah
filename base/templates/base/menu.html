@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+    {% for product in products %}
+    <p>{{ product.product_name }} -- {{ product.price }} <br>
+        {{ product.bio }} <br>
+        {% if request.user.is_staff %}
+            <a href="{% url 'delete_product' product.id %}">Удалить позицию</a>
+        {% endif %}
+        <hr>
+    </p>
+    {% endfor %}        
+
+{% endblock %}

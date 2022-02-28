@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    <div class="hookah_map">
+        <a href="{% url 'menu' %}">Бар</a>
+        {% for table in tables %}
+            <div class="tables">
+                <a href="{% url 'make_order' table %}">Столик №{{ table }}</a>
+            </div>
+        {% endfor %}
+        
+
+
+    </div>
+
+{% endblock %}

@@ -9,12 +9,12 @@
     }
 
 </style>
-<hr>
+
 <div class="home-container">
     <div class="Games">
         <!-- В цикле выведем пару-тройку игр -->
-        {% for i in list %}
-            <a href="#">Игра {{ i }}</a>
+        {% for game in games %}
+            <a href="{% url 'singlegame' game.id %}">{{ game.game_name }}</a>
             <br>
         {% endfor %} 
         <a href="{% url 'games' %}">Еще></a>
@@ -26,10 +26,11 @@
     </div>
     <div class="MenuPos">
         <!-- В цикле выведем пару-тройку пунктов меню(напитков?) -->
-        {% for i in list %}
-            <a href="#">Напиток {{ i }}</a>
+        {% for product in products %}
+            <p>{{ product.product_name }} -- {{ product.price }}</p>
             <br>
-        {% endfor %}        
+        {% endfor %} 
+        <a href="{% url 'menu' %}">Еще></a>    
     </div>
 </div>
 {% endblock %}

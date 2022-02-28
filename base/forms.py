@@ -38,7 +38,7 @@ class OrdersForm(ModelForm):
     """
     class Meta:
         model = OrdersModel
-        fields = ['table', 'order_date']
+        fields = ['order_date']
 
         widgets = {
             'order_date': SplitDateTimeWidget(

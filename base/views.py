@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
 
-from .forms import GamesForm, OrdersForm, MyUserCreationForm
-from .models import GamesModel, OrdersModel, UserModel
+from .forms import GamesForm, MenuForm, OrdersForm, MyUserCreationForm
+from .models import GamesModel, MenuModel, OrdersModel, UserModel
 
 
 def homePage(request):
@@ -16,9 +16,11 @@ def homePage(request):
 
     '''
 
-    list_ = [1, 2, 3 , 4]
+    games = GamesModel.objects.all()
+    products = MenuModel.objects.all()
     context = {
-        'list': list_
+        'games': games,
+        'products': products
     }
     return render(request, 'base/home.html', context)
 
@@ -26,7 +28,18 @@ def homePage(request):
 #Бронирование столиков
 
 
-def MakeOrderPage(request):
+def roomMap(request):
+    '''
+    План заведения
+    '''
+    tables = list(range(1, 15))
+    context = {
+        'tables': tables
+    }
+    return render(request, 'base/map.html', context)
+
+
+def MakeOrderPage(request, table):
     '''
     Страница для бронирования столика
 
@@ -42,7 +55,7 @@ def MakeOrderPage(request):
             minutes=reservation_duration.tm_min
         )
         order_exist = OrdersModel.objects.filter(
-            table=request.POST.get('table')
+            table=table
         ).filter(
             expired_time__gt =  reservation_time
         ).filter(
@@ -51,11 +64,11 @@ def MakeOrderPage(request):
 
         if order_exist:
             messages.error(request, 'К сожалению, на данное время выбранный столик недоступен')
-            return redirect('make_order')
+            return render(request, 'base/map.html')
         
         OrdersModel.objects.create(
             user = request.user,
-            table = request.POST.get('table'),
+            table = table,
             order_date = reservation_time,
             expired_time = expire_time
         )
@@ -255,6 +268,67 @@ def deleteGame(request, id):
     if request.method == 'POST':
         game.delete()
         return redirect('games')
+    context = {
+        'title': title
+    }
+    return render(request, 'base/delete.html', context)
+
+
+#Меню
+
+def menuPage(request):
+    '''
+    Страница меню
+    '''
+    products = MenuModel.objects.all()
+    context = { 
+        'products': products
+    }
+    return render(request, 'base/menu.html', context)
+
+
+def addProduct(request):
+    '''
+    Страница добавления продуктов
+    '''
+    form = MenuForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'base/add_product.html', context)
+
+
+def addProductProcess(request):
+    form = MenuForm()
+    if request.method == 'POST':
+        form = MenuForm(request.POST)
+        if form.is_valid():
+            try:
+                exist_food = MenuModel.objects.get(product_name=request.POST.get('product_name')) 
+                if exist_food:
+                    messages.error(request, 'Такая позиция меню уже существует')
+                    return redirect('add_product')
+                else:
+                    raise ValueError
+            except:
+                form.save()
+                return redirect('home')
+        else:
+            messages.error(request, 'Случилась ошибка!')
+            return redirect('add_product') 
+
+
+def deleteProduct(request, id):
+    '''
+    Удалить позицию из меню
+    
+    '''
+    title = 'product'
+    product = MenuModel.objects.get(id=id)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('menu')
     context = {
         'title': title
     }

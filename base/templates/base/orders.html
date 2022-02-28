@@ -6,7 +6,7 @@
 <div class="reservation-container">
 
     {% for order in orders %}
-        <p>{{ order.user }} -- {{ order.table }} <br>
+        <p>{{ order.user }} -- Стол №{{ order.table }} <br>
             {{ order.order_date }} -- {{ order.expired_time }}
             <a href="{% url 'delete_reservation' order.id %}">Отменить бронирование</a>
             <hr>
