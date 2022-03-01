@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+
 from .forms import GamesForm, MenuForm, OrdersForm, MyUserCreationForm
 from .models import GamesModel, MenuModel, OrdersModel, UserModel
 
@@ -27,7 +29,7 @@ def homePage(request):
 
 #Бронирование столиков
 
-
+@login_required(login_url='login')
 def roomMap(request):
     '''
     План заведения
@@ -39,6 +41,7 @@ def roomMap(request):
     return render(request, 'base/map.html', context)
 
 
+@login_required(login_url='login')
 def MakeOrderPage(request, table):
     '''
     Страница для бронирования столика
@@ -78,6 +81,7 @@ def MakeOrderPage(request, table):
     return render(request, 'base/make_order.html', context)
 
 
+@login_required(login_url='login')
 def CheckOrdersPage(request):
     '''
     Страница для просмотра бронирования
@@ -95,6 +99,7 @@ def CheckOrdersPage(request):
     return render(request, 'base/orders.html', context)
 
 
+@login_required(login_url='login')
 def deletePage(request, id):
     '''
     Отмена брони
