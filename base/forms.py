@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import ModelForm
+from django.forms import ChoiceField, ModelForm, Form
 from django.forms.widgets import SplitDateTimeWidget
 
 from .models import UserModel, MenuModel, GamesModel, OrdersModel
@@ -25,11 +25,16 @@ class MenuForm(ModelForm):
         fields = "__all__"
 
 
-class GamesForm(ModelForm):
+class GamesForm(ModelForm, Form):
     """
     Форма для игр
     """
+    CHOISES = (
+        ("Настольная", "Настольная"),
+        ("PS", "PS")
+    )
 
+    game_type = ChoiceField(choices=CHOISES)
     class Meta:
         model = GamesModel
         fields = "__all__"

@@ -5,6 +5,12 @@ from djmoney.models.fields import MoneyField
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+CHOISES = (
+        ("Настольная", "Настольная"),
+        ("PS", "PS")
+    )
+
+
 class UserModel(AbstractUser):
     """
     Модель регистрации
@@ -46,9 +52,9 @@ class GamesModel(models.Model):
     game_type определяет настольная игра или для playstation
 
     """
-
+    
     game_name = models.CharField(max_length=200, null=True)
-    game_type = models.CharField(max_length=50, null=True)
+    game_type = models.CharField(max_length=50, null=True, choices=CHOISES)
     bio = models.TextField(null=True, blank=True)
 
     image = models.ImageField(null=True, blank=True, default="avatar.svg")
