@@ -17,6 +17,17 @@ def run_field_parameter_test(
             self_.assertEqual(parameter_real_value, expected_value)
 
 
+class TestVerboseNameMixin:
+    """Миксин для проверки verbose_name"""
+
+    def run_verbose_name_test(self, model):
+        """Метод, тестирующий verbose_name"""
+
+        run_field_parameter_test(
+            model, self, self.field_and_verbose_name, "verbose_name"
+        )
+
+
 class TestMaxLengthMixin:
     """Миксин для проверки max_length"""
 
@@ -26,7 +37,7 @@ class TestMaxLengthMixin:
         run_field_parameter_test(model, self, self.field_and_max_length, "max_length")
 
 
-class MenuTest(TestCase, TestMaxLengthMixin):
+class MenuTest(TestCase, TestMaxLengthMixin, TestVerboseNameMixin):
     """
     Тесты модели MenuModel
     """
@@ -41,6 +52,9 @@ class MenuTest(TestCase, TestMaxLengthMixin):
         cls.field_and_max_length = {
             "product_name": 200,
         }
+        cls.field_and_verbose_name = {
+            "product_name": "Наименование продукта",
+        }
         cls.product_name = cls.menu._meta.get_field("product_name")
         cls.price = cls.menu._meta.get_field("price")
         cls.bio = cls.menu._meta.get_field("bio")
@@ -49,6 +63,11 @@ class MenuTest(TestCase, TestMaxLengthMixin):
         """Тест параметра max_length"""
 
         super().run_max_length_test(MenuModel)
+
+    def test_verbose_name(self):
+        """Тест параметра verbose_name"""
+
+        super().run_verbose_name_test(MenuModel)
 
     def test_default_currency(self):
         """Тест параметра default_currency"""
@@ -68,7 +87,7 @@ class MenuTest(TestCase, TestMaxLengthMixin):
         self.assertEqual(str(self.menu), str(self.menu.product_name))
 
 
-class GameTest(TestCase, TestMaxLengthMixin):
+class GameTest(TestCase, TestMaxLengthMixin, TestVerboseNameMixin):
     """
     Тесты модели GameModel
     """
@@ -81,6 +100,9 @@ class GameTest(TestCase, TestMaxLengthMixin):
             game_name="test_game",
             game_type="PS",
         )
+        cls.field_and_verbose_name = {
+            "game_name": "Название игры",
+        }
         cls.field_and_max_length = {"game_name": 200, "game_type": 50}
         cls.game_name = cls.games._meta.get_field("game_name")
         cls.game_type = cls.games._meta.get_field("game_type")
@@ -89,6 +111,11 @@ class GameTest(TestCase, TestMaxLengthMixin):
         """Тест параметра max_length"""
 
         super().run_max_length_test(GamesModel)
+
+    def test_game_name_vebose_name(self):
+        """Тест параметра verbose_name"""
+
+        super().run_verbose_name_test(GamesModel)
 
     def test_str_method(self):
         """Тест строкового отображения"""
@@ -121,13 +148,14 @@ class OrdersTest(TestCase, TestMaxLengthMixin):
         )
 
 
-class UserTest(TestCase, TestMaxLengthMixin):
+class UserTest(TestCase, TestMaxLengthMixin, TestVerboseNameMixin):
     @classmethod
     def setUpTestData(cls) -> None:
         """Заносит данные в БД перед запуском тестов класса"""
 
         cls.users = UserModel.objects.create(name="test_name", phone="+79098654412")
         cls.field_and_max_length = {"name": 200}
+        cls.field_and_verbose_name = {"name": "Имя", "phone": "Телефон"}
         cls.name = cls.users._meta.get_field("name")
         cls.phone = cls.users._meta.get_field("phone")
 
@@ -135,6 +163,11 @@ class UserTest(TestCase, TestMaxLengthMixin):
         """Тест параметра max_length"""
 
         super().run_max_length_test(UserModel)
+
+    def test_user_verbose_names(self):
+        """Тест параметра verbose_name"""
+
+        super().run_verbose_name_test(UserModel)
 
     def test_unique(self):
         """Тест параметра unique"""
